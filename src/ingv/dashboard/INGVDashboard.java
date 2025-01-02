@@ -18,14 +18,14 @@ public class INGVDashboard extends Application {
         
         Scene scene = new Scene(root);
         
+        stage.setMinWidth(640);
+        stage.setMinHeight(520);
+        
         stage.setTitle("INGV Earthquakes Dashboard");
         stage.setScene(scene);
         stage.show();
     }
-
-    /**
-     * @param args the command line arguments
-     */
+    
     public static void main(String[] args) {
         launch(args);
     }

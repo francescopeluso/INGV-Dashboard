@@ -8,7 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="INGV-Dashboard.jar" size="7102" download="eager" />
+    <jar href="INGV-Dashboard.jar" size="11581" download="eager" />
   </resources>
   <jfx:javafx-desc  width="800" height="600" main-class="ingv.dashboard.INGVDashboard"  name="INGV-Dashboard" />
   <update check="always"/>

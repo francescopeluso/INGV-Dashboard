@@ -3,16 +3,11 @@ package ingv.dashboard.model;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -20,13 +15,21 @@ import java.util.logging.Logger;
  */
 public class INGVUtils {
     
-    public static Set<INGVEvent> readFromINGV(LocalDate startDate, LocalDate endDate) throws IOException {
+    public static Set<INGVEvent> readFromINGV(LocalDate startDate, LocalDate endDate, Integer minMagnitude, Integer maxMagnitude) throws IOException {
         
         String apiURL = "https://webservices.ingv.it/fdsnws/event/1/query?format=text"
                 + "&starttime=" + startDate
                 + "&endtime=" + endDate;
         
-        System.out.println(apiURL);
+        if (minMagnitude != null && minMagnitude >= 0) {
+            apiURL += "&minmag=" + minMagnitude;
+        }
+        
+        if (maxMagnitude != null && maxMagnitude >= 0) {
+            apiURL += "&maxmag=" + maxMagnitude;
+        }
+        
+        System.out.println("Retrieving data from: " + apiURL);
         
         URL apiEndpoint = new URL(apiURL);
         

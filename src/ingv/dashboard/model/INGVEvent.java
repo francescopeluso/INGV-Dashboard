@@ -32,7 +32,15 @@ public class INGVEvent implements Comparable<INGVEvent> {
 
     @Override
     public int compareTo(INGVEvent o) {
-        return this.eventDatetime.compareTo(o.eventDatetime);
+        int dateTimeDiff = this.eventDatetime.compareTo(o.eventDatetime);
+        if (dateTimeDiff != 0)
+            return dateTimeDiff;
+        
+        int magnitudeDiff = Double.compare(this.magnitude, o.magnitude);
+        if (magnitudeDiff != 0)
+            return magnitudeDiff;
+        
+        return this.location.compareToIgnoreCase(o.location);
     }
 
     @Override
