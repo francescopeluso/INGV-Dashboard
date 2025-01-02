@@ -21,5 +21,7 @@ jobs:
       with:
         java-version: '8'
         distribution: 'temurin'
+    - name: Install JavaFX Native Libraries
+      run: sudo apt-get install openjfx -y
     - name: Build with Ant
       run: ant -noinput -buildfile build.xml
