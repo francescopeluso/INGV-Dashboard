@@ -2,6 +2,8 @@
 
 A simple JavaFX application for visualizing and filtering event data by date, location, and magnitude.
 
+All the data that are collected are publicly available from the web services made available by the Italian National Institute of Geophysics and Volcanology (Istituto Nazionale di Geofisica e Vulcanologia - INGV).
+
 ![Screenshot](assets/screenshot.png)
 
 ## ✨ Features
