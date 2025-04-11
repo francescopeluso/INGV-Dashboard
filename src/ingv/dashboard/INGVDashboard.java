@@ -18,8 +18,8 @@ public class INGVDashboard extends Application {
         
         Scene scene = new Scene(root);
         
-        stage.setMinWidth(640);
-        stage.setMinHeight(520);
+        stage.setMinWidth(800);
+        stage.setMinHeight(600);
         
         stage.setTitle("INGV Earthquakes Dashboard");
         stage.setScene(scene);
