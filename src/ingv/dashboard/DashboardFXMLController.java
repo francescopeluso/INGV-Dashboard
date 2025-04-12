@@ -1,15 +1,12 @@
 package ingv.dashboard;
 
 import ingv.dashboard.model.INGVEvent;
-import ingv.dashboard.model.INGVUtils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.ResourceBundle;
 import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
@@ -18,7 +15,6 @@ import javafx.collections.transformation.FilteredList;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -28,7 +24,6 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -70,7 +65,9 @@ public class DashboardFXMLController implements Initializable {
     
     private ObservableList<INGVEvent> eventsHistory;
     private FilteredList<INGVEvent> filteredEvents;
-    private final DataLoadService dataLoadService = new DataLoadService();
+    private final CaricaReportService dataLoadService = new CaricaReportService();
+    @FXML
+    private TextField limitTextArea;
     
     
     @Override
@@ -132,6 +129,7 @@ public class DashboardFXMLController implements Initializable {
         });
         
         loadingIndicator.visibleProperty().bind(dataLoadService.runningProperty());
+        loadingIndicator.progressProperty().bind(dataLoadService.progressProperty());
         
         ContextMenu cm = new ContextMenu();
         MenuItem mi = new MenuItem("Esporta selezione");
@@ -165,10 +163,21 @@ public class DashboardFXMLController implements Initializable {
     @FXML
     private void loadDataAction(ActionEvent event) {
         try {
+            String limitText = limitTextArea.getText().trim();
+            int limit = 1000;
+            
+            if (!limitText.isEmpty()) {
+                try {
+                    limit = Integer.parseInt(limitTextArea.getText());
+                } catch (NumberFormatException e) {}
+            }
+            
+            dataLoadService.setRemoteURL("https://webservices.ingv.it/fdsnws/event/1/query?format=text");
             dataLoadService.setStartDate(startDatePicker.getValue());
             dataLoadService.setEndDate(endDatePicker.getValue());
             dataLoadService.setMinMagValue(Integer.parseInt(minMagnitudeField.getText()));
             dataLoadService.setMaxMagValue(Integer.parseInt(maxMagnitudeField.getText()));
+            dataLoadService.setLimit(limit);
 
             if (dataLoadService.getState() == Worker.State.RUNNING) {
                 dataLoadService.cancel();
@@ -212,7 +221,7 @@ public class DashboardFXMLController implements Initializable {
             try (FileWriter writer = new FileWriter(file)) {
 
                 StringBuilder sb = new StringBuilder();
-                sb.append("#EventID|Time|Latitude|Longitude|Depth/Km|Author|Catalog|Contributor|ContributorID|MagType|Magnitude|MagAuthor|EventLocationName\n");
+                sb.append("Date|Magnitude|Location\n");
 
                 for (INGVEvent e : selectedItems) {
                     sb.append("" + e.getEventDatetime()).append("|")
